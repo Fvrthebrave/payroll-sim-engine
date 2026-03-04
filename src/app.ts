@@ -6,21 +6,23 @@ import { PayrollRepo } from './repositories/payroll.repo';
 import { AuditRepo } from './repositories/audit.repo';  
 
 import { PayrollService } from './services/payroll/payroll.service';
-import { TaxService } from "./services/payroll/tax.service";
+import { TaxService } from "./services/tax/tax.service";
 
 import { EmployeesController } from './controllers/employees.controller';
 import { PayrollController } from './controllers/payroll.controller';
 import { PayInputsController } from './controllers/payInputs.controller';
 
 import { createEmployeesRouter } from './routes/employees.routes';
-import { createPayInputsRouter } from './routes/payInputs.routes';
+import { createPayInputsRouter} from './routes/payInputs.routes';
 import { createPayrollRouter } from './routes/payroll.routes';
+import cors from 'cors';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL

@@ -2,7 +2,7 @@ import { Pool } from 'pg';
 import { PayrollRepo } from "../../repositories/payroll.repo";
 import { EmployeeRepo } from "../../repositories/employee.repo";
 import { AuditRepo } from "../../repositories/audit.repo";
-import { TaxService } from "./tax.service";
+import { TaxService } from "../tax/tax.service";
 
 export class PayrollService {
   constructor(
@@ -40,6 +40,7 @@ export class PayrollService {
           );
 
           if (run) break;
+          await new Promise(r => setTimeout(r, 50))
         }
 
         if (!run) {

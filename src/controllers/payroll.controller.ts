@@ -7,7 +7,7 @@ export class PayrollController {
   ) {};
 
   // Run payroll for a given period
-  async runPayroll(req: Request, res: Response) {
+  runPayroll = async (req: Request, res: Response) => {
     const { periodStart, periodEnd, idempotencyKey } = req.body;
 
     if(!periodStart || !periodEnd || !idempotencyKey) {

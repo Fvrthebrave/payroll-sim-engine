@@ -5,7 +5,7 @@ import { PayrollService } from '../services/payroll/payroll.service';
 import { PayrollRepo } from '../repositories/payroll.repo';
 import { EmployeeRepo } from '../repositories/employee.repo';
 import { AuditRepo } from '../repositories/audit.repo';
-import { TaxService } from '../services/payroll/tax.service';
+import { TaxService } from '../services/tax/tax.service';
 console.log("DATABASE_URL in test:", process.env.DATABASE_URL);
 
 describe("Payroll concurrency test", () => {

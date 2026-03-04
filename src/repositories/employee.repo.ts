@@ -19,6 +19,7 @@ export class EmployeeRepo {
       baseRateCents: number;
     }
   ) {
+
     const res = await client.query(`
       INSERT INTO employees (name, employee_type, base_rate_cents)
       VALUES ($1, $2, $3) 
@@ -54,7 +55,8 @@ export class EmployeeRepo {
         overtime_hours,
         bonus_cents,
         deductions_cents
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+      ) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
        ON CONFLICT (employee_id, period_start, period_end)
        DO UPDATE
        SET regular_hours = EXCLUDED.regular_hours,
@@ -73,7 +75,10 @@ export class EmployeeRepo {
        ]
       )
 
-      return res.rows[0];
+      return {
+        payInput: res.rows[0],
+        inserted: res.rowCount === 1
+      }
     }
 
     // Get pay inputs for employees for a given period
@@ -99,11 +104,28 @@ export class EmployeeRepo {
         [params.employeeIds, params.periodStart, params.periodEnd]
       )
 
-      const map = new Map();
-      for(const row of res.rows) {
-        map.set(row.employee_id, row);
+      type PayInputRow = {
+        id: string;
+        employee_id: string;
+        period_start: Date;
+        period_end: Date;
+        regular_hours: number;
+        overtime_hours: number;
+        bonus_cents: number;
+        deductions_cents: number;
+        created_at: Date;
+      };
+
+      const inputs: Record<string, PayInputRow> = {};
+
+      for (const row of res.rows) {
+        inputs[row.employee_id] = {
+          ...row,
+          regular_hours: Number(row.regular_hours),
+          overtime_hours: Number(row.overtime_hours)
+        };
       }
 
-      return map;
+      return inputs;
     }
 }

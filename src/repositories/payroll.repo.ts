@@ -62,8 +62,8 @@ export class PayrollRepo {
       }
     ) {
       const res = await client.query(`
-        INSERT INTO payroll_entries (payroll_run_id, employee_id, gross_cents, tax_cents, net_cents, details)
-        VALUES ($1, $2, $3, $4, $5, $6)
+        INSERT INTO payroll_entries (payroll_run_id, employee_id, gross_cents, tax_cents, net_cents, details, deduction_cents)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
         RETURNING *
         `,
         [params.payrollRunId, 
@@ -71,7 +71,8 @@ export class PayrollRepo {
          params.grossCents, 
          params.taxCents, 
          params.netCents, 
-         params.details]
+         params.details,
+         params.deductionCents]
       );
 
       return res.rows[0];
@@ -81,7 +82,8 @@ export class PayrollRepo {
     async markCompleted(client: PoolClient, payrollRunId: number) {
       const res = await client.query(`
         UPDATE payroll_runs
-        SET status = 'completed'
+        SET status = 'completed',
+            completed_at = NOW()
         WHERE id = $1
         RETURNING *
         `, [payrollRunId]);
