@@ -77,7 +77,7 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto; -- for gen_random_uuid()
 
 -- Indexes
 CREATE INDEX idx_pay_inputs_employee
-ON pay_inputs(employee+id);
+ON pay_inputs(employee_id);
 
 CREATE INDEX idx_payroll_entries_run
 ON payroll_entries(payroll_run_id);
