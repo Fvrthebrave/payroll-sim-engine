@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react';
 import api from '../api';
 
 function Dashboard() {
+  const [summary, setSummary] = useState(null);
+
   const formatDateTime = (isoValue) => {
     if (!isoValue) return "-";
     const date = new Date(isoValue);
     if (Number.isNaN(date.getTime())) return isoValue;
     return date.toLocaleString();
   };
-  const [summary, setSummary] = useState(null);
 
   useEffect(() => {
     const load = async () => {
