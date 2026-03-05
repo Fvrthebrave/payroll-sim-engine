@@ -20,6 +20,9 @@ export class PayrollController {
       idempotencyKey
     })
 
-    res.json(result);
+    res.json({
+      id: result.id,
+      status: result.status
+    });
   }
 }

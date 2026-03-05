@@ -1,4 +1,18 @@
+import { useState, useEffect } from 'react';
+import api from '../api';
+
 function Dashboard() {
+  const [summary, setSummary] = useState(null);
+
+  useEffect(() => {
+    const load = async () => {
+      const res = await api.get("/dashboard/summary");
+      setSummary(res.data);
+    }
+
+    load();
+  }, []);
+
   return (
     <section className="page">
       <header className="page-header">
@@ -9,19 +23,20 @@ function Dashboard() {
 
       <div className="stats-grid">
         <article className="stat-card">
-          <p>Active Employees</p>
-          <h3>42</h3>
-          <span>+3 from last month</span>
+          <h3>Active Employees</h3>
+          <p>{summary?.active_employees ?? "-"}</p>
         </article>
         <article className="stat-card">
-          <p>Next Payroll Date</p>
-          <h3>Mar 15</h3>
-          <span>11 days remaining</span>
+          <h3>Next Payroll Date</h3>
+          <p>{summary?.next_payroll_date ?? "-"}</p>
         </article>
         <article className="stat-card">
-          <p>Projected Gross Pay</p>
-          <h3>$96,420</h3>
-          <span>Current cycle estimate</span>
+          <h3>Proj Gross Pay</h3>
+          <p>
+            ${summary
+              ? (summary.projected_gross_pay / 100).toLocaleString()
+              : "-"}
+          </p>
         </article>
       </div>
     </section>

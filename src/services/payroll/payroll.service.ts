@@ -1,7 +1,7 @@
 import { Pool } from 'pg';
 import { PayrollRepo } from "../../repositories/payroll.repo";
 import { EmployeeRepo } from "../../repositories/employee.repo";
-import { AuditRepo } from "../../repositories/audit.repo";
+import { AuditRepo } from "../../repositories/audits.repo";
 import { TaxService } from "../tax/tax.service";
 
 export class PayrollService {
@@ -62,7 +62,7 @@ export class PayrollService {
       // 4) Insert entries for all employees
       for (const emp of employees) {
         const input =
-          inputsByEmp.get(emp.id) ?? {
+          inputsByEmp[emp.id] ?? {
             regular_hours: 0,
             overtime_hours: 0,
             bonus_cents: 0,

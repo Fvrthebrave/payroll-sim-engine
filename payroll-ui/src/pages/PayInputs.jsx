@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import api from '../api';
 
 function PayInputs() {
-  const periodStart = "2026-03-01";
-  const periodEnd = "2026-03-15";
   const [employees, setEmployees] = useState([]);
   const [payInputs, setPayInputs] = useState({});
+  const [periodStart, setPeriodStart] = useState("2026-03-01");
+  const [periodEnd, setPeriodEnd] = useState("2026-03-15");
 
   const [form, setForm] = useState({
     employeeId: "",
@@ -33,7 +33,7 @@ function PayInputs() {
 
     load();
 
-  }, []);
+  }, [periodStart, periodEnd]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -82,6 +82,27 @@ function PayInputs() {
 
       <div className="card">
         <form onSubmit={handleSubmit} className="employee-form">
+          <div className="pay-period-row">
+            <label className="field-group">
+              <span>Payroll Start</span>
+              <input
+                className="input-field"
+                type="date"
+                value={periodStart}
+                onChange={(e) => setPeriodStart(e.target.value)}
+              />
+            </label>
+            <label className="field-group">
+              <span>Payroll End</span>
+              <input
+                className="input-field"
+                type="date"
+                value={periodEnd}
+                onChange={(e) => setPeriodEnd(e.target.value)}
+              />
+            </label>
+          </div>
+
           <div className="form-grid pay-inputs-grid">
             <label className="field-group">
               <span>Employee</span>

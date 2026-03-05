@@ -239,6 +239,134 @@ a {
   filter: brightness(1.07);
 }
 
+.payroll-run-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.payroll-run-btn.is-completed {
+  background: linear-gradient(135deg, #28c985, #4de9b0);
+  box-shadow: 0 0 0 2px rgba(77, 233, 176, 0.25), 0 12px 26px rgba(28, 182, 122, 0.45);
+  animation: payroll-complete-pop 0.45s ease, payroll-complete-glow 1.1s ease;
+}
+
+.payroll-run-btn.is-failed {
+  background: linear-gradient(135deg, #d8476f, #ff7a66);
+  box-shadow: 0 0 0 2px rgba(255, 122, 102, 0.2), 0 12px 26px rgba(168, 35, 66, 0.45);
+  animation: payroll-failed-shake 0.36s ease, payroll-failed-glow 1.1s ease;
+}
+
+.payroll-response-card {
+  margin-top: 0.9rem;
+  background: rgba(10, 19, 39, 0.88);
+  animation: response-fade-in 0.45s ease;
+}
+
+.payroll-response-header {
+  padding-top: 0;
+}
+
+.response-kv-grid {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.6rem;
+}
+
+.response-kv-item {
+  border: 1px solid rgba(77, 118, 201, 0.28);
+  border-radius: 10px;
+  background: rgba(5, 12, 28, 0.72);
+  padding: 0.55rem 0.65rem;
+}
+
+.response-kv-item dt {
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.response-kv-item dd {
+  margin: 0.2rem 0 0;
+  font-weight: 600;
+  color: #d8e9ff;
+}
+
+.response-table-section {
+  margin-top: 0.8rem;
+}
+
+.response-table-section h4 {
+  margin: 0 0 0.35rem;
+  font-size: 0.92rem;
+  color: #c8daff;
+}
+
+.response-table td,
+.response-table th {
+  white-space: nowrap;
+}
+
+@keyframes response-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes payroll-complete-pop {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes payroll-complete-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(77, 233, 176, 0.55), 0 10px 22px rgba(37, 160, 255, 0.35);
+  }
+  100% {
+    box-shadow: 0 0 0 12px rgba(77, 233, 176, 0), 0 12px 26px rgba(28, 182, 122, 0.45);
+  }
+}
+
+@keyframes payroll-failed-shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-3px);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+  75% {
+    transform: translateX(-2px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes payroll-failed-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 122, 102, 0.55), 0 10px 22px rgba(37, 160, 255, 0.35);
+  }
+  100% {
+    box-shadow: 0 0 0 12px rgba(255, 122, 102, 0), 0 12px 26px rgba(168, 35, 66, 0.45);
+  }
+}
+
 .table-wrap {
   overflow-x: auto;
   margin-top: 0.75rem;
@@ -261,6 +389,13 @@ a {
 .pay-inputs-grid {
   grid-template-columns: minmax(180px, 2fr) repeat(4, minmax(120px, 1fr));
   gap: 0.45rem;
+}
+
+.pay-period-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(180px, 240px));
+  gap: 0.55rem;
+  margin-bottom: 1.4rem;
 }
 
 .field-group {
@@ -299,6 +434,10 @@ a {
   border-color: #49d4ff;
   box-shadow: 0 0 0 3px rgba(53, 212, 255, 0.22);
   background: rgba(255, 255, 255, 0.06);
+}
+
+.input-field[type="date"] {
+  color-scheme: dark;
 }
 
 .select-field option {
@@ -391,6 +530,56 @@ a {
   font-variant-numeric: tabular-nums;
 }
 
+.ledger-table-card {
+  background: rgba(12, 21, 43, 0.85);
+}
+
+.ledger-table {
+  min-width: 680px;
+}
+
+.ledger-table-wrap {
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.ledger-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.ledger-col-type {
+  width: 28%;
+}
+
+.ledger-col-action {
+  width: 34%;
+}
+
+.ledger-col-created {
+  width: 38%;
+}
+
+.ledger-table th:first-child,
+.ledger-table td:first-child,
+.ledger-table th:nth-child(2),
+.ledger-table td:nth-child(2) {
+  text-align: left;
+}
+
+.ledger-table th:nth-child(3),
+.ledger-table td:nth-child(3) {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.ledger-empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 1rem;
+}
+
 .employee-table {
   width: 100%;
   border-collapse: collapse;
@@ -450,6 +639,10 @@ a {
   }
 
   .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pay-period-row {
     grid-template-columns: 1fr;
   }
 

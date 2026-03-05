@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "worker": "ts-node src/workers/payrollWorker.ts",
     "build": "tsc",
     "start": "node dist/server.js",
     "test": "jest"
@@ -16,6 +17,7 @@
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
+    "ioredis": "^5.10.0",
     "pg": "^8.19.0"
   },
   "devDependencies": {

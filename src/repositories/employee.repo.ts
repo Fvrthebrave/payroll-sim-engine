@@ -1,5 +1,17 @@
 import { PoolClient } from 'pg';
 
+type PayInputRow = {
+  id: string;
+  employee_id: string;
+  period_start: Date;
+  period_end: Date;
+  regular_hours: number;
+  overtime_hours: number;
+  bonus_cents: number;
+  deductions_cents: number;
+  created_at: Date;
+};
+
 export class EmployeeRepo {
   // Get all employees, ordered by most recent
   async getAll(client: PoolClient) {
@@ -89,9 +101,9 @@ export class EmployeeRepo {
         periodStart: string;
         periodEnd: string
       }
-    ) {
+    ): Promise<Record<string, PayInputRow>> {
       if(params.employeeIds.length === 0) {
-        return new Map();
+        return {};
       }
 
       const res = await client.query(`
@@ -103,18 +115,6 @@ export class EmployeeRepo {
         `, 
         [params.employeeIds, params.periodStart, params.periodEnd]
       )
-
-      type PayInputRow = {
-        id: string;
-        employee_id: string;
-        period_start: Date;
-        period_end: Date;
-        regular_hours: number;
-        overtime_hours: number;
-        bonus_cents: number;
-        deductions_cents: number;
-        created_at: Date;
-      };
 
       const inputs: Record<string, PayInputRow> = {};
 

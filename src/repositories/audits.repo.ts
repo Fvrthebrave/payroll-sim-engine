@@ -1,5 +1,11 @@
 import { PoolClient } from 'pg';
 
+type LedgerRow = {
+  id: string;
+  type: string;
+  createdDate: string
+};
+
 export class AuditRepo {
   async insert(
     client: PoolClient,
@@ -21,5 +27,17 @@ export class AuditRepo {
     );
 
     return res.rows[0];
+  }
+
+  async getAuditData(
+    client: PoolClient
+  ): Promise<LedgerRow[]> {
+    const res = await client.query(`
+        SELECT id, entity_type, action, metadata, created_at
+        FROM audit_logs
+        ORDER BY created_at
+      `)
+
+      return res.rows;
   }
 }

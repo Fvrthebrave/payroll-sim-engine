@@ -1,4 +1,5 @@
 import { PoolClient } from 'pg';
+import { redis } from '../db/redis';
 
 export class PayrollRepo {
 
@@ -29,7 +30,7 @@ export class PayrollRepo {
         periodStart: string;
         periodEnd: string;
         idempotencyKey: string;
-        status: 'processing' | 'completed' | 'failed';
+        status: 'queued' | 'completed' | 'failed';
       }
     ) {
       const res = await client.query(`
@@ -45,7 +46,17 @@ export class PayrollRepo {
          params.status]
       );
 
-      return res.rows[0];
+      const run = res.rows[0];
+
+      const job = {
+        runId: run.id,
+        periodStart: run.period_start,
+        periodEnd: run.period_end
+      }
+
+      await redis.rpush("payroll_jobs", JSON.stringify(job));
+
+      return run;
     }
 
     // Insert payroll entry for employee + run
