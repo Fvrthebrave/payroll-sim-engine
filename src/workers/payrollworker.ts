@@ -5,14 +5,8 @@ async function startWorker() {
   console.log('Payroll worker has started...');
 
   while(true) {
-    const result = await redis.rpop("payroll_jobs");
-
-    if(!result) {
-      await sleep(2000);
-      continue;
-    }
-
-    const job = JSON.parse(result);
+    const result = await redis.brpop("payroll_jobs", 0);
+    const job = JSON.parse(result![1]);
 
     const client = await pool.connect();
 
