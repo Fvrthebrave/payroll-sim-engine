@@ -30,7 +30,7 @@ export class PayrollRepo {
         periodStart: string;
         periodEnd: string;
         idempotencyKey: string;
-        status: 'queued' | 'completed' | 'failed';
+        status: 'queued' | 'processing' | 'completed' | 'failed';
       }
     ) {
       const res = await client.query(`

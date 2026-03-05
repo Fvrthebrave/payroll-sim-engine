@@ -1,0 +1,1 @@
+{"version":3,"file":"audits.routes.js","sourceRoot":"","sources":["../../src/routes/audits.routes.ts"],"names":[],"mappings":";;;;;;AAAA,sDAA8B;AAIvB,MAAM,iBAAiB,GAAG,CAAC,UAA2B,EAAE,EAAE;IAC/D,MAAM,MAAM,GAAG,iBAAO,CAAC,MAAM,EAAE,CAAC;IAEhC,MAAM,CAAC,GAAG,CAAC,OAAO,EAAE,UAAU,CAAC,YAAY,CAAC,CAAC;IAE7C,OAAO,MAAM,CAAC;AAChB,CAAC,CAAA;AANY,QAAA,iBAAiB,qBAM7B"}

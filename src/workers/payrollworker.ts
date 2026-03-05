@@ -5,11 +5,14 @@ async function startWorker() {
   console.log('Payroll worker has started...');
 
   while(true) {
-    const result = await redis.brpop("payroll_jobs", 0);
+    const result = await redis.rpop("payroll_jobs");
 
-    if(!result) continue;
+    if(!result) {
+      await sleep(2000);
+      continue;
+    }
 
-    const job = JSON.parse(result[1]);
+    const job = JSON.parse(result);
 
     const client = await pool.connect();
 
@@ -56,3 +59,7 @@ async function startWorker() {
 }
 
 startWorker();
+
+function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
