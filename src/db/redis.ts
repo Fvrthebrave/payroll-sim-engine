@@ -9,11 +9,7 @@ if (!process.env.REDIS_URL) {
 
 export const redis = new Redis(process.env.REDIS_URL!, {
   maxRetriesPerRequest: null,
-  enableReadyCheck: false,
-
-  tls: {
-    rejectUnauthorized: false
-  },
+  enableReadyCheck: true,
 
   retryStrategy(times) {
     return Math.min(times * 1000, 5000);
@@ -28,10 +24,14 @@ redis.on("ready", () => {
   console.log("Redis ready");
 });
 
+redis.on("reconnecting", () => {
+  console.log("Redis reconnecting...");
+});
+
 redis.on("error", (err) => {
   console.error("Redis error:", err);
 });
 
-redis.on("reconnecting", () => {
-  console.log("Redis reconnecting...");
+redis.on("close", () => {
+  console.log("Redis connection closed");
 });
