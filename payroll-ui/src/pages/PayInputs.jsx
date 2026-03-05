@@ -54,7 +54,6 @@ function PayInputs() {
       });
 
       await loadPayInputs();
-      alert("Pay inputs saved");
 
       setForm({
         employeeId: "",

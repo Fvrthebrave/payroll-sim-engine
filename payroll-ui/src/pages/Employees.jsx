@@ -8,7 +8,6 @@ function Employees() {
   useEffect(() => {
     api.get("/employees")
       .then(res => {
-        console.log(res.data);
         setEmployees(res.data)
       })
       .catch(err => {

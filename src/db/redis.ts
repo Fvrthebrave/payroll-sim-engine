@@ -8,7 +8,9 @@ if(!process.env.REDIS_URL) {
 
 export const redis = new Redis(process.env.REDIS_URL!, {
   maxRetriesPerRequest: null,
-  enableReadyCheck: false ,
+  enableReadyCheck: false,
+
+  tls: {},
 
   retryStrategy(times) {
     return Math.min(times * 1000, 5000);
