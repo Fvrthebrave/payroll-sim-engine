@@ -15,7 +15,6 @@ function Ledger() {
     const load = async () => {
       const res = await api.get("/audit/logs");
       
-      console.log(res.data);
       setLedger(res.data);
     };
 

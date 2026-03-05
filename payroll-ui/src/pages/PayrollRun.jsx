@@ -96,13 +96,13 @@ function PayrollRun() {
         idempotencyKey: crypto.randomUUID()
       });
 
-      await new Promise(resolve => setTimeout(resolve, 5000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       setResponseData(res.data);
       setResults(Array.isArray(res.data) ? res.data : (res.data?.results || []));
       setCompleted(true);
       setTimeout(() => {
         setCompleted(false);
-      }, 2000);
+      }, 1000);
     } catch(err) {
       console.error(err);
       setFailed(true);
