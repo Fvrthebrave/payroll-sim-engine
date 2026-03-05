@@ -47,8 +47,6 @@ app.use(cors({
   credentials: true
 }));
 
-app.options("*", cors());
-
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL
 })
