@@ -8,8 +8,10 @@ if (!process.env.REDIS_URL) {
 }
 
 export const redis = new Redis(process.env.REDIS_URL, {
+  tls: {},
+  enableReadyCheck: false,
   maxRetriesPerRequest: null,
-  enableReadyCheck: true,
+  lazyConnect: true,
   keepAlive: 10000,
 
   retryStrategy(times) {
@@ -36,3 +38,5 @@ redis.on("close", () => {
 redis.on("error", (err) => {
   console.error("Redis error:", err.message);
 });
+
+redis.connect().catch(console.error);
