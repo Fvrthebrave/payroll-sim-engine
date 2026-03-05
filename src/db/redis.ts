@@ -1,15 +1,16 @@
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
 
-import Redis from 'ioredis';
+import Redis from "ioredis";
 
 if (!process.env.REDIS_URL) {
-  throw new Error('REDIS_URL is not defined');
+  throw new Error("REDIS_URL is not defined");
 }
 
-export const redis = new Redis(process.env.REDIS_URL!, {
+export const redis = new Redis(process.env.REDIS_URL, {
   maxRetriesPerRequest: null,
   enableReadyCheck: true,
+  keepAlive: 10000,
 
   retryStrategy(times) {
     return Math.min(times * 1000, 5000);
@@ -28,10 +29,10 @@ redis.on("reconnecting", () => {
   console.log("Redis reconnecting...");
 });
 
-redis.on("error", (err) => {
-  console.error("Redis error:", err);
-});
-
 redis.on("close", () => {
   console.log("Redis connection closed");
+});
+
+redis.on("error", (err) => {
+  console.error("Redis error:", err.message);
 });
