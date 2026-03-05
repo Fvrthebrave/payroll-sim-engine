@@ -2,6 +2,12 @@ import { useState, useEffect } from 'react';
 import api from '../api';
 
 function Dashboard() {
+  const formatDateTime = (isoValue) => {
+    if (!isoValue) return "-";
+    const date = new Date(isoValue);
+    if (Number.isNaN(date.getTime())) return isoValue;
+    return date.toLocaleString();
+  };
   const [summary, setSummary] = useState(null);
 
   useEffect(() => {
@@ -28,7 +34,7 @@ function Dashboard() {
         </article>
         <article className="stat-card">
           <h3>Next Payroll Date</h3>
-          <p>{summary?.next_payroll_date ?? "-"}</p>
+          <p>{formatDateTime(summary?.next_payroll_date) ?? "-"}</p>
         </article>
         <article className="stat-card">
           <h3>Proj Gross Pay</h3>
