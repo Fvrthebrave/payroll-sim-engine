@@ -55,7 +55,8 @@ export class PayrollRepo {
       }
 
       await redis.rpush("payroll_jobs", JSON.stringify(job));
-
+      console.log("Job pushed to Redis:", job);
+      
       return run;
     }
 
