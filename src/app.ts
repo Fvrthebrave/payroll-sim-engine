@@ -25,11 +25,6 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://payroll-sim-engine-q84x9imrw-collin-desotos-projects.vercel.app"
-];
-
 app.use(cors({
   origin: [
     "http://localhost:5173",
