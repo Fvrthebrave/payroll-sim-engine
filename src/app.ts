@@ -28,10 +28,16 @@ app.use(express.json());
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://payroll-sim-engine.vercel.app"
+    "https://payroll-sim-engine.vercel.app",
+    /\.vercel\.app$/
   ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 }));
+
+// handle preflight requests
+app.options("*", cors());
 
 app.options("*", cors());
 
