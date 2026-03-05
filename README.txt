@@ -1,8 +1,12 @@
 # Payroll Simulation Engine
 
-A transactional payroll processing simulation built with Node.js, TypeScript, PostgreSQL, and Redis.
+A distributed payroll processing simulation demonstrating how financial systems maintain transactional integrity under concurrent workloads.
 
-This project demonstrates financial data integrity, idempotent operations, distributed job processing, and concurrency-safe database design.
+Built with Node.js, TypeScript, PostgreSQL, Redis, and React.
+
+The system models real-world backend architecture used in payroll and financial platforms, including idempotent request handling, background job workers, transactional database updates, and ledger-style financial records.
+
+This project focuses on correctness, concurrency safety, and reliable financial workflows rather than simple CRUD APIs.
 
 ---
 
