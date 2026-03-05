@@ -34,8 +34,8 @@ export class PayrollRepo {
       }
     ) {
       const res = await client.query(`
-        INSERT INTO payroll_runs (period_start, period_end, idempotency_key, status)
-        VALUES ($1, $2, $3, $4)
+        INSERT INTO payroll_runs (period_start, period_end, idempotency_key, status, created_at)
+        VALUES ($1, $2, $3, $4, NOW())
         ON CONFLICT
         DO NOTHING
         RETURNING *
