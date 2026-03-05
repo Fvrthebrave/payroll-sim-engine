@@ -1,3 +1,5 @@
+Node.js | TypeScript | PostgreSQL | Redis | React
+
 # Payroll Simulation Engine
 
 A distributed payroll processing simulation demonstrating how financial systems maintain transactional integrity under concurrent workloads.
@@ -24,10 +26,24 @@ It is designed to showcase:
 - Clean architecture separation
 
 This project focuses on correctness and system design principles commonly required in financial systems.
-
+A lightweight React interface allows users to initiate payroll runs and observe job processing and ledger updates in real time.
 ---
 
 ## Architecture
+
+  #- Architecture Overview
+
+          React UI
+           |
+        Node.js API
+           |
+       Redis Job Queue
+           |
+        Worker Process
+           |
+       PostgreSQL
+   (Transactions + Ledger)
+
 
 The application follows a layered architecture:
 
@@ -56,7 +72,7 @@ If any step fails, the transaction rolls back.
 
 ---
 
-## Key Features
+## Key Engineering Concepts
 
 ### Transaction-Safe Payroll Runs
 
@@ -70,6 +86,7 @@ Duplicate requests with the same key will not create multiple payroll runs.
 ### Concurrency Protection
 
 Jobs are claimed using conditional row updates to prevent multiple workers from processing the same payroll run.
+This pattern ensures that even under concurrent workers, a payroll run can only be processed once.
 
 Pattern used:
 
@@ -95,12 +112,13 @@ Every payroll run creates an audit entry to ensure traceability.
 
 ## Tech Stack
 
-- Node.js
-- TypeScript
-- PostgreSQL
-- Redis
-- Zod for validation
-- Docker (optional)
+Node.js (Express)
+TypeScript
+PostgreSQL (transactional data layer)
+Redis (job queue and worker coordination)
+React (UI for payroll simulation)
+Zod (schema validation)
+Docker (local development environment)
 
 ---
 
@@ -251,3 +269,16 @@ This project demonstrates backend engineering patterns relevant to:
 - Concurrency-safe design
 
 It is intended as a portfolio project showcasing production-grade backend concepts.
+
+## What This Project Demonstrates
+
+This project was built to demonstrate backend engineering patterns used in financial systems:
+
+- transaction-safe data processing
+- idempotent request handling
+- distributed job processing
+- concurrency-safe database updates
+- ledger-style financial modeling
+- clean service architecture
+
+These patterns are commonly used in fintech platforms, payroll systems, and high-integrity backend services.
