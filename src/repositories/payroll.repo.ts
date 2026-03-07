@@ -58,8 +58,6 @@ export class PayrollRepo {
         periodEnd: run.period_end
       };
 
-      await redis.rpush("payroll_jobs", JSON.stringify(job));
-
       return run;
     }
 

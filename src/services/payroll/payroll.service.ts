@@ -90,7 +90,7 @@ export class PayrollService {
     })
 
     for(const emp of employees) {
-
+      console.log("Writing ledger entries for employee:", emp.id);
       const input = inputsByEmp[emp.id] ?? {
         regular_hours: 0,
         overtime_hours: 0,
