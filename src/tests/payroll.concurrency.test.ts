@@ -6,7 +6,7 @@ import { PayrollRepo } from '../repositories/payroll.repo';
 import { EmployeeRepo } from '../repositories/employee.repo';
 import { AuditRepo } from '../repositories/audits.repo';
 import { TaxService } from '../services/tax/tax.service';
-console.log("DATABASE_URL in test:", process.env.DATABASE_URL);
+import { LedgerRepo } from "../repositories/ledger.repo";
 
 describe("Payroll concurrency test", () => {
   let pool: Pool;
@@ -22,7 +22,8 @@ describe("Payroll concurrency test", () => {
       new PayrollRepo(),
       new EmployeeRepo(),
       new AuditRepo(),
-      new TaxService()
+      new TaxService(),
+      new LedgerRepo()
     );
 
     const client = await pool.connect();
