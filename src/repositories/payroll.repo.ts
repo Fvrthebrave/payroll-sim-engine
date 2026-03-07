@@ -52,12 +52,6 @@ export class PayrollRepo {
         return null; // conflict happened
       }
 
-      const job = {
-        runId: run.id,
-        periodStart: run.period_start,
-        periodEnd: run.period_end
-      };
-
       return run;
     }
 
@@ -97,18 +91,5 @@ export class PayrollRepo {
         `, [runId])
 
         return result.rows[0];
-    }
-    
-    // Mark run completed
-    async markCompleted(client: PoolClient, payrollRunId: number) {
-      const res = await client.query(`
-        UPDATE payroll_runs
-        SET status = 'completed',
-            completed_at = NOW()
-        WHERE id = $1
-        RETURNING *
-        `, [payrollRunId]);
-
-        return res.rows[0] ?? null;
     }
 }
