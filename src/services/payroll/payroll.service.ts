@@ -72,9 +72,9 @@ export class PayrollService {
   }
 
   async processPayrollRun(client: PoolClient, runId: string) {
+    console.log("processPayrollRun called with:", runId);
     const run = await this.payrollRepo.getRunById(client, runId);
-
-    console.log(run);
+    console.log("Run loaded:", run);
     
     if(!run) {
       throw new Error("Payroll not found");
