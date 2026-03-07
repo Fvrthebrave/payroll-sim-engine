@@ -26,8 +26,6 @@ const payrollService = new PayrollService(
 );
 
 async function startWorker() {
-  const db = await pool.query("SELECT current_database()");
-  console.log("Worker DB:", db.rows[0]);
   console.log('Payroll worker has started...');
 
   while(true) {
@@ -57,8 +55,6 @@ async function startWorker() {
         AND status = 'queued'
         RETURNING id
       `, [job.runId]);
-
-      console.log("Claim rows:", claim.rowCount);
 
         if(claim.rowCount === 0) {
           console.log('Run already claimed:', job.runId);
