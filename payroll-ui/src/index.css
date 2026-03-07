@@ -616,6 +616,24 @@ a {
   border: 1px solid rgba(124, 157, 255, 0.34);
 }
 
+.type-chip--expense {
+  background: rgba(239, 85, 85, 0.2);
+  color: #ffb6b6;
+  border-color: rgba(239, 85, 85, 0.42);
+}
+
+.type-chip--liability {
+  background: rgba(255, 166, 77, 0.2);
+  color: #ffd19a;
+  border-color: rgba(255, 166, 77, 0.42);
+}
+
+.type-chip--asset {
+  background: rgba(77, 233, 176, 0.2);
+  color: #abf4d9;
+  border-color: rgba(77, 233, 176, 0.42);
+}
+
 .ledger-row strong {
   font-family: "Space Grotesk", "Segoe UI", sans-serif;
 }

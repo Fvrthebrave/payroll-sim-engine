@@ -3,6 +3,11 @@ import api from "../api";
 
 function LedgerBalances() {
   const [balances, setBalances] = useState([]);
+  const resolveCategory = (account = "") => {
+    if (account.includes("expense")) return "expense";
+    if (account.includes("liability") || account.includes("payable")) return "liability";
+    return "asset";
+  };
 
   useEffect(() => {
     const load = async () => {
@@ -43,7 +48,11 @@ function LedgerBalances() {
               ) : (
                 balances.map((row) => (
                   <tr key={row.account}>
-                    <td>{row.label}</td>
+                    <td>
+                      <span className={`type-chip type-chip--${resolveCategory(row.account)}`}>
+                        {row.label ?? row.account}
+                      </span>
+                    </td>
                     <td>${(Number(row.balance || 0) / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                   </tr>
                 ))
