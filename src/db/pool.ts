@@ -14,3 +14,14 @@ pool.on("connect", () => {
 pool.on("error", err => {
   console.error("Unexpected Postgres error", err)
 });
+
+export async function verifyPostgresConnection() {
+  const client = await pool.connect();
+
+  try {
+    const result = await client.query(`SELECT NOW()`);
+    console.log('Postgres connected:', result.rows[0]);
+  } finally {
+    client.release();
+  };
+}

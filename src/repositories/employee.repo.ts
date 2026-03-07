@@ -1,4 +1,5 @@
 import { PoolClient } from 'pg';
+import { Employee } from '../services/types';
 
 type PayInputRow = {
   id: string;
@@ -14,7 +15,7 @@ type PayInputRow = {
 
 export class EmployeeRepo {
   // Get all employees, ordered by most recent
-  async getAll(client: PoolClient) {
+  async getAll(client: PoolClient): Promise<Employee[]> {
     const res = await client.query(`
       SELECT * 
       FROM employees

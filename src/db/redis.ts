@@ -7,8 +7,11 @@ if (!process.env.REDIS_URL) {
   throw new Error("REDIS_URL is not defined");
 }
 
-export const redis = new Redis(process.env.REDIS_URL, {
-  tls: {},
+const redisUrl = process.env.REDIS_URL;
+
+export const redis = new Redis(redisUrl, {
+  ...(redisUrl.startsWith("rediss://") ? { tls: {} } : {}),
+
   enableReadyCheck: false,
   maxRetriesPerRequest: null,
   lazyConnect: true,

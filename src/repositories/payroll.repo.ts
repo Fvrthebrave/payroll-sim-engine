@@ -65,7 +65,7 @@ export class PayrollRepo {
       client: PoolClient,
       params: {
       payrollRunId: number,
-      employeeId: number,
+      employeeId: string,
       grossCents: number,
       taxCents: number,
       deductionCents: number,

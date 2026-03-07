@@ -1,5 +1,23 @@
 import { redis } from '../db/redis';
 import { pool } from '../db/pool';
+import { PayrollService } from '../services/payroll/payroll.service'
+import { PayrollRepo } from  '../repositories/payroll.repo';
+import { EmployeeRepo } from '../repositories/employee.repo';
+import { AuditRepo } from '../repositories/audits.repo';
+import { TaxService } from '../services/tax/tax.service';
+
+const payrollRepo = new PayrollRepo();
+const employeeRepo = new EmployeeRepo();
+const auditRepo = new AuditRepo();
+const taxService = new TaxService();
+
+const payrollService = new PayrollService(
+  pool,
+  payrollRepo,
+  employeeRepo,
+  auditRepo,
+  taxService
+);
 
 async function startWorker() {
   console.log('Payroll worker has started...');
@@ -21,10 +39,10 @@ async function startWorker() {
           SET status = 'processing',
               started_at = NOW()
           WHERE id = $1
+          AND status = 'queued'
         `, [job.runId]);
 
-        // TODO: run payroll calculation here
-        await new Promise(resolve => setTimeout(resolve, 3000));
+        await payrollService.processPayrollRun(client, job.runId);
 
         await client.query(`
             UPDATE payroll_runs

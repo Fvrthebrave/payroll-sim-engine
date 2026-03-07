@@ -25,7 +25,7 @@ function Ledger() {
     <section className="page">
       <header className="page-header">
         <p className="eyebrow">Accounting</p>
-        <h2>Payroll Ledger</h2>
+        <h2>Audit Log</h2>
         <p className="subtle">Recent payroll-related entries prepared for reconciliation.</p>
       </header>
 

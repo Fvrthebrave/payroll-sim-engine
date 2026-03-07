@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Employees from "./pages/Employees";
 import PayrollRun from "./pages/PayrollRun";
-import Ledger from "./pages/Ledger";
+import AuditLog from "./pages/AuditLog";
 import PayInputs from "./pages/PayInputs";
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
             <Link to="/">Dashboard</Link>
             <Link to="/employees">Employees</Link>
             <Link to="/payroll">Run Payroll</Link>
-            <Link to="/ledger">Ledger</Link>
+            <Link to="/audit-log">Audit Log</Link>
             <Link to="/pay-inputs">Pay Inputs</Link>
           </nav>
           <p className="sidebar-note">Connected to Payroll API</p>
@@ -27,7 +27,7 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/employees" element={<Employees />} />
             <Route path="/payroll" element={<PayrollRun />} />
-            <Route path="/ledger" element={<Ledger />} />
+            <Route path="/audit-log" element={<AuditLog />} />
             <Route path="/pay-inputs" element={<PayInputs />} />
           </Routes>
         </main>
