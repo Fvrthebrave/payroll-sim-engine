@@ -574,6 +574,12 @@ a {
   font-variant-numeric: tabular-nums;
 }
 
+.ledger-balances-table th:nth-child(2),
+.ledger-balances-table td:nth-child(2) {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
 .ledger-empty {
   text-align: center;
   color: var(--muted);

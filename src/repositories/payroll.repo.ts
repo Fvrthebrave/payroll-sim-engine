@@ -55,7 +55,6 @@ export class PayrollRepo {
       }
 
       await redis.rpush("payroll_jobs", JSON.stringify(job));
-      console.log("Job pushed to Redis:", job);
       
       return run;
     }
@@ -88,6 +87,14 @@ export class PayrollRepo {
       );
 
       return res.rows[0];
+    }
+
+    async getRunById(client: PoolClient, runId: string) {
+      const result = await client.query(`
+          SELECT * FROM payroll_runs WHERE id = $1;
+        `, [runId])
+
+        return result.rows[0];
     }
     
     // Mark run completed

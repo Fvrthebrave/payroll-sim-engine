@@ -2,6 +2,7 @@ import { Pool, PoolClient } from 'pg';
 import { PayrollRepo } from "../../repositories/payroll.repo";
 import { EmployeeRepo } from "../../repositories/employee.repo";
 import { AuditRepo } from "../../repositories/audits.repo";
+import { LedgerRepo } from "../../repositories/ledger.repo";
 import { TaxService } from "../tax/tax.service";
 import { redis } from "../../db/redis";
 
@@ -12,7 +13,8 @@ export class PayrollService {
     private payrollRepo: PayrollRepo,
     private employeeRepo: EmployeeRepo,
     private auditRepo: AuditRepo,
-    private taxService: TaxService
+    private taxService: TaxService,
+    private ledgerRepo: LedgerRepo
   ) {};
 
   async runPayroll(params: {
@@ -54,6 +56,8 @@ export class PayrollService {
 
       await redis.lpush("payroll_jobs", JSON.stringify({ runId: run.id }))
 
+      console.log("Queued payroll job:", run.id);
+
       await client.query("COMMIT");
       return  {
         id: run.id,
@@ -68,7 +72,8 @@ export class PayrollService {
   }
 
   async processPayrollRun(client: PoolClient, runId: string) {
-    const run = await this.payrollRepo.getRunByIdempotencyKey(client, runId);
+    console.log("AAAA")
+    const run = await this.payrollRepo.getRunById(client, runId);
 
     if(!run) {
       throw new Error("Payroll not found");
@@ -95,6 +100,31 @@ export class PayrollService {
       const taxCents = this.taxService.computeTaxCents(grossCents);
       const deductionCents = input.deductions_cents;
       const netCents = grossCents - taxCents - deductionCents;
+
+      await this.ledgerRepo.insertEntry(client,  {
+        payrollRunId: run.id,
+        employeeId: emp.id,
+        account: "payroll_expense",
+        debitCents: grossCents,
+        creditCents: 0,
+        metaData: { employee: emp.id }
+      });
+
+      await this.ledgerRepo.insertEntry(client, {
+        payrollRunId: run.id,
+        employeeId: emp.id,
+        account: "tax_liability",
+        debitCents: 0,
+        creditCents: taxCents
+      });
+
+      await this.ledgerRepo.insertEntry(client, {
+        payrollRunId: run.id,
+        employeeId: emp.id,
+        account: "cash",
+        debitCents: 0,
+        creditCents: netCents
+      });
 
       await this.payrollRepo.insertEntry(client, {
         payrollRunId: run.id,

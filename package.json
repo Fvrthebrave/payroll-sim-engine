@@ -4,9 +4,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "worker": "node dist/workers/payrollworker.js",
+    "worker": "ts-node-dev --respawn --transpile-only src/workers/payrollworker.ts",
     "build": "tsc",
     "start": "node dist/server.js",
+    "start:worker": "node dist/workers/payrollworker.js",
     "test": "jest",
     "seed:dev": "ts-node src/db/seed.ts"
   },

@@ -4,11 +4,13 @@ import { PayrollService } from '../services/payroll/payroll.service'
 import { PayrollRepo } from  '../repositories/payroll.repo';
 import { EmployeeRepo } from '../repositories/employee.repo';
 import { AuditRepo } from '../repositories/audits.repo';
+import { LedgerRepo } from '../repositories/ledger.repo';
 import { TaxService } from '../services/tax/tax.service';
 
 const payrollRepo = new PayrollRepo();
 const employeeRepo = new EmployeeRepo();
 const auditRepo = new AuditRepo();
+const ledgerRepo = new LedgerRepo();
 const taxService = new TaxService();
 
 const payrollService = new PayrollService(
@@ -16,7 +18,8 @@ const payrollService = new PayrollService(
   payrollRepo,
   employeeRepo,
   auditRepo,
-  taxService
+  taxService,
+  ledgerRepo
 );
 
 async function startWorker() {
@@ -25,6 +28,7 @@ async function startWorker() {
   while(true) {
     console.log("Worker waiting for jobs...");
     const result = await redis.brpop("payroll_jobs", 0);
+
     const job = JSON.parse(result![1]);
 
     const client = await pool.connect();
@@ -34,13 +38,19 @@ async function startWorker() {
 
       await client.query("BEGIN");
 
-      await client.query(`
+      const claim = await client.query(`
           UPDATE payroll_runs
           SET status = 'processing',
               started_at = NOW()
           WHERE id = $1
           AND status = 'queued'
         `, [job.runId]);
+
+        if(claim.rowCount === 0) {
+          console.log('Run already claimed:', job.runId);
+          await client.query('ROLLBACK');
+          continue;
+        }
 
         await payrollService.processPayrollRun(client, job.runId);
 

@@ -4,6 +4,7 @@ import Employees from "./pages/Employees";
 import PayrollRun from "./pages/PayrollRun";
 import AuditLog from "./pages/AuditLog";
 import PayInputs from "./pages/PayInputs";
+import LedgerBalances from "./pages/LedgerBalances";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Link to="/payroll">Run Payroll</Link>
             <Link to="/audit-log">Audit Log</Link>
             <Link to="/pay-inputs">Pay Inputs</Link>
+            <Link to="/ledger-balances">Ledger Balances</Link>
           </nav>
           <p className="sidebar-note">Connected to Payroll API</p>
         </aside>
@@ -29,6 +31,7 @@ function App() {
             <Route path="/payroll" element={<PayrollRun />} />
             <Route path="/audit-log" element={<AuditLog />} />
             <Route path="/pay-inputs" element={<PayInputs />} />
+            <Route path="/ledger-balances" element={<LedgerBalances />} />
           </Routes>
         </main>
       </div>
