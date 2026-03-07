@@ -62,7 +62,6 @@ async function startWorker() {
           continue;
         }
 
-        console.log('PROCESSING PAYROLL RUN');
         await payrollService.processPayrollRun(client, job.runId);
 
         await client.query(`
@@ -76,7 +75,7 @@ async function startWorker() {
         await client.query("COMMIT");
 
         console.log('Payroll run completed:', job.runId);
-    } catch (err) {
+    } catch (err: any) {
       await client.query("ROLLBACK");
 
       await client.query(`

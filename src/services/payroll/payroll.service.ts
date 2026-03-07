@@ -55,7 +55,6 @@ export class PayrollService {
       }
 
       await redis.lpush("payroll_jobs", JSON.stringify({ runId: run.id }))
-
       console.log("Queued payroll job:", run.id);
 
       await client.query("COMMIT");
@@ -63,7 +62,7 @@ export class PayrollService {
         id: run.id,
         status: "queued"
       }
-    } catch (err) {
+    } catch (err: any) {
       await client.query("ROLLBACK");
       throw err;
     } finally {
