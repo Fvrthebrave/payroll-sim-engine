@@ -75,13 +75,14 @@ export class PayrollService {
     console.log("processPayrollRun called with:", runId);
     const run = await this.payrollRepo.getRunById(client, runId);
     console.log("Run loaded:", run);
-    
+
     if(!run) {
       throw new Error("Payroll not found");
     }
 
     const employees = await this.employeeRepo.getAll(client);
-
+    console.log("Employees loaded:", employees.length);
+    
     const inputsByEmp = await this.employeeRepo.getPayInputsForPeriod(client, {
       employeeIds: employees.map((e) => e.id),
       periodStart: run.period_start,

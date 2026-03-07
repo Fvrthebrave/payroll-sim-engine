@@ -36,7 +36,7 @@ export class PayrollRepo {
       const res = await client.query(`
         INSERT INTO payroll_runs (period_start, period_end, idempotency_key, status, created_at)
         VALUES ($1, $2, $3, $4, NOW())
-        ON CONFLICT
+        ON CONFLICT (idempotency_key)
         DO NOTHING
         RETURNING *
         `, 
@@ -48,14 +48,18 @@ export class PayrollRepo {
 
       const run = res.rows[0];
 
+      if (!run) {
+        return null; // conflict happened
+      }
+
       const job = {
         runId: run.id,
         periodStart: run.period_start,
         periodEnd: run.period_end
-      }
+      };
 
       await redis.rpush("payroll_jobs", JSON.stringify(job));
-      
+
       return run;
     }
 
