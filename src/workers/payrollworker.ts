@@ -52,6 +52,7 @@ async function startWorker() {
           continue;
         }
 
+        console.log('PROCESSING PAYROLL RUN');
         await payrollService.processPayrollRun(client, job.runId);
 
         await client.query(`
