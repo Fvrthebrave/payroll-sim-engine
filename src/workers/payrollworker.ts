@@ -31,6 +31,7 @@ async function startWorker() {
   console.log('Payroll worker has started...');
 
   while(true) {
+    console.log("Worker waiting for jobs...");
     const result = await redis.brpop("payroll_jobs", 0);
 
     if (!result) {
