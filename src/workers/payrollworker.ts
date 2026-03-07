@@ -23,13 +23,20 @@ const payrollService = new PayrollService(
 );
 
 async function startWorker() {
+  const db = await pool.query("SELECT current_database()");
+  console.log("Worker DB:", db.rows[0]);
   console.log('Payroll worker has started...');
 
   while(true) {
-    console.log("Worker waiting for jobs...");
     const result = await redis.brpop("payroll_jobs", 0);
 
-    const job = JSON.parse(result![1]);
+    if (!result) {
+      console.log("No job received from Redis");
+      continue;
+    }
+
+    const job = JSON.parse(result[1]);
+    console.log("Job popped from queue:", job);
 
     const client = await pool.connect();
 
@@ -39,12 +46,15 @@ async function startWorker() {
       await client.query("BEGIN");
 
       const claim = await client.query(`
-          UPDATE payroll_runs
-          SET status = 'processing',
-              started_at = NOW()
-          WHERE id = $1
-          AND status = 'queued'
-        `, [job.runId]);
+        UPDATE payroll_runs
+        SET status = 'processing',
+            started_at = NOW()
+        WHERE id = $1
+        AND status = 'queued'
+        RETURNING id
+      `, [job.runId]);
+
+      console.log("Claim rows:", claim.rowCount);
 
         if(claim.rowCount === 0) {
           console.log('Run already claimed:', job.runId);
