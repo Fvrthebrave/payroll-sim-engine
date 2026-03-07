@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import { redis } from '../db/redis';
 import { pool } from '../db/pool';
 import { PayrollService } from '../services/payroll/payroll.service'
