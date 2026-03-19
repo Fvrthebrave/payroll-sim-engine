@@ -9,6 +9,18 @@ if (!process.env.REDIS_URL) {
 
 const redisUrl = process.env.REDIS_URL;
 
+const log = (...args: any[]) => {
+  if(process.env.NODE_ENV !== "test") {
+    console.log(...args);
+  }
+}
+
+const errorLog = (...args: any[]) => {
+  if(process.env.NODE_ENV) {
+    console.log(...args);
+  }
+};
+
 export const redis = new Redis(redisUrl, {
   ...(redisUrl.startsWith("rediss://") ? { tls: {} } : {}),
 
@@ -23,23 +35,23 @@ export const redis = new Redis(redisUrl, {
 });
 
 redis.on("connect", () => {
-  console.log("Redis connected");
+ log("Redis connected");
 });
 
 redis.on("ready", () => {
-  console.log("Redis ready");
+  log("Redis ready");
 });
 
 redis.on("reconnecting", () => {
-  console.log("Redis reconnecting...");
+  log("Redis reconnecting...");
 });
 
 redis.on("close", () => {
-  console.log("Redis connection closed");
+  log("Redis connection closed");
 });
 
 redis.on("error", (err) => {
-  console.error("Redis error:", err.message);
+  errorLog("Redis error:", err.message);
 });
 
 redis.connect().catch(console.error);

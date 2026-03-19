@@ -5,6 +5,7 @@ import { AuditRepo } from "../../repositories/audits.repo";
 import { LedgerRepo } from "../../repositories/ledger.repo";
 import { TaxService } from "../tax/tax.service";
 import { redis } from "../../db/redis";
+import retry  from "../../utils/retry";
 
 
 export class PayrollService {
@@ -63,6 +64,11 @@ export class PayrollService {
         status: "queued"
       }
     } catch (err: any) {
+
+      if(err.code === '23505') {
+        throw new Error("Payroll run already active for this period");
+      }
+      
       await client.query("ROLLBACK");
       throw err;
     } finally {
@@ -71,6 +77,9 @@ export class PayrollService {
   }
 
   async processPayrollRun(client: PoolClient, runId: string) {
+    let totalDebits = 0;
+    let totalCredits = 0;
+
     console.log("processPayrollRun called with:", runId);
     const run = await this.payrollRepo.getRunById(client, runId);
     console.log("Run loaded:", run);
@@ -97,10 +106,15 @@ export class PayrollService {
         deductions_cents: 0
       };
 
+
       const grossCents = this.computeGrossCents(emp, input);
       const taxCents = this.taxService.computeTaxCents(grossCents);
       const deductionCents = input.deductions_cents;
       const netCents = grossCents - taxCents - deductionCents;
+
+      totalDebits += grossCents;
+      totalCredits += taxCents;
+      totalCredits += netCents;
 
       await this.ledgerRepo.insertEntry(client,  {
         payrollRunId: run.id,
@@ -142,7 +156,13 @@ export class PayrollService {
           bonusCents: Number(input.bonus_cents)
         }
       });
+    }
 
+    // if balancing mismatch, error will bubble up to worker.
+    if(totalDebits !== totalCredits) {
+      throw new Error(
+        `Ledger imbalance detected: debits=${totalDebits}, credits=${totalCredits}`
+      );
     }
   }
 
