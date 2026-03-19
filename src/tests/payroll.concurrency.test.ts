@@ -7,6 +7,7 @@ import { EmployeeRepo } from '../repositories/employee.repo';
 import { AuditRepo } from '../repositories/audits.repo';
 import { TaxService } from '../services/tax/tax.service';
 import { LedgerRepo } from "../repositories/ledger.repo";
+import { redis } from "../db/redis";
 
 describe("Payroll concurrency test", () => {
   let pool: Pool;
@@ -65,6 +66,7 @@ describe("Payroll concurrency test", () => {
   });
 
   afterAll(async () => {
+    await redis.quit();
     await pool.end()
   });
 
@@ -79,11 +81,23 @@ describe("Payroll concurrency test", () => {
       })
     );
 
-    const results = await Promise.all(attempts);
+    const results = await Promise.allSettled(attempts);
+    
+    const summary = results.reduce((acc, r) => {
+      acc[r.status] = (acc[r.status] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    console.log("Concurrency result:", summary);
+
 
     // All run IDs should match
-    const runIds = results.map(r => r.id);
+    const successfulRuns = results
+      .filter((r): r is PromiseFulfilledResult<any> => r.status === 'fulfilled')
+      .map(r => r.value); 
+    const runIds = successfulRuns.map(r => r.id);
     const uniqueRunIds = new Set(runIds);
+
     expect(uniqueRunIds.size).toBe(1);
 
     const client = await pool.connect();

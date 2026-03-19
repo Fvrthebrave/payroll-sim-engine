@@ -9,6 +9,7 @@ import { EmployeeRepo } from '../repositories/employee.repo';
 import { AuditRepo } from '../repositories/audits.repo';
 import { LedgerRepo } from '../repositories/ledger.repo';
 import { TaxService } from '../services/tax/tax.service';
+import retry from "../utils/retry";
 
 const payrollRepo = new PayrollRepo();
 const employeeRepo = new EmployeeRepo();
@@ -45,36 +46,39 @@ async function startWorker() {
     try {
       console.log('Processing payroll run:', job.runId);
 
-      await client.query("BEGIN");
+      await retry(async () => {
+        await client.query("BEGIN");
 
-      const claim = await client.query(`
-        UPDATE payroll_runs
-        SET status = 'processing',
-            started_at = NOW()
-        WHERE id = $1
-        AND status = 'queued'
-        RETURNING id
-      `, [job.runId]);
+        const claim = await client.query(`
+          UPDATE payroll_runs
+          SET status = 'processing',
+              started_at = NOW()
+          WHERE id = $1
+          AND status = 'queued'
+          RETURNING id
+        `, [job.runId]);
 
-        if(claim.rowCount === 0) {
-          console.log('Run already claimed:', job.runId);
-          await client.query('ROLLBACK');
-          continue;
-        }
+          if(claim.rowCount === 0) {
+            console.log('Run already claimed:', job.runId);
+            await client.query('ROLLBACK');
+            return;
+          }
 
-        await payrollService.processPayrollRun(client, job.runId);
+          payrollService.processPayrollRun(client, job.runId);
 
-        await client.query(`
-            UPDATE payroll_runs
-            SET status = 'completed',
-                completed_at = NOW()
-            WHERE id = $1
-            AND status = 'processing'
-          `, [job.runId]);
+          await client.query(`
+              UPDATE payroll_runs
+              SET status = 'completed',
+                  completed_at = NOW()
+              WHERE id = $1
+              AND status = 'processing'
+            `, [job.runId]);
 
-        await client.query("COMMIT");
+          await client.query("COMMIT");
 
-        console.log('Payroll run completed:', job.runId);
+          console.log('Payroll run completed:', job.runId);
+      }, 3, 500);
+      
     } catch (err: any) {
       await client.query("ROLLBACK");
 
