@@ -22,6 +22,7 @@ function App() {
             <Link to="/ledger-balances">Ledger Balances</Link>
           </nav>
           <p className="sidebar-note">Connected to Payroll API</p>
+          <p className="sidebar-note">If no data is showing up, please give the app time to load. If the application has not been used for a while, it will take a bit to spin up the database.</p>
         </aside>
 
         <main className="page-frame">

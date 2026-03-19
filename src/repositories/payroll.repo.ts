@@ -46,13 +46,11 @@ export class PayrollRepo {
          params.status]
       );
 
-      const run = res.rows[0];
-
-      if (!run) {
-        return null; // conflict happened
+      if(res.rows.length === 0) {
+        return null;
       }
 
-      return run;
+      return res.rows[0];
     }
 
     // Insert payroll entry for employee + run
