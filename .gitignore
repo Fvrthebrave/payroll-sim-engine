@@ -1,1 +1,41 @@
-.env*
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Runtime
+pids/
+*.pid
+
+# Coverage
+coverage/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+
+# AWS
+.aws/
+
+# Docker
+docker-compose.override.yml
